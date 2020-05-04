@@ -1,5 +1,23 @@
 (function( $ ) {
 
+    function strFn(a,b)  {
+        return a.text().localeCompare(b.text());
+    };
+    function numFn(a,b)  {
+        try {
+            a=parseInt(a.text());
+            if(isNaN(a)) return 1;
+        } catch(e) { return 1; }
+        try {
+            b=parseInt(b.text());
+            if(isNaN(b)) return -1;
+        } catch(e) { return -1; }
+        try {
+            return a<b? 1 : b<a? -1 : 0;
+        } catch(e) { return 0; }
+    };
+
+    // works only with div
     function SetupGrid(setup) {
         this.addClass("apGrid");
         var table = $(document.createElement('table'));
@@ -10,10 +28,9 @@
         table.append(tbody);
         this.append(table);
         table.css("max-height", "400px")
-        table.on("scroll", function () {
-            fixScroll.call(this);
+            .on("scroll", function () {
+                fixScroll.call(this);
         });
-
         if(typeof(setup)!='object') return;
         if('columns' in setup) {
             var defPercent = 100/setup.columns.length;
@@ -22,24 +39,34 @@
                 var name = ('name' in colDef)? colDef.name : "col"+i;
                 var percent = ('percent' in colDef)? colDef.percent+"%" : defPercent;
                 addColumn.call(this, name, percent);
-                if('sort' in colDef) {
-                    addSorting.call(this,i,colDef.sort);
+                if('type' in colDef) {
+                    switch(colDef.type) {
+                        case "string":
+                            addSorting.call(this,i,strFn);
+                            break;
+                        case "number":
+                            addSorting.call(this,i,numFn);
+                            break;
+                    }
+
                 }
             }
 
         }
     }
 
+    // works with div and table
     function fixSizes() {
         var $headCells = this.find("thead tr th")
         var $bodyRow = this.find("tbody tr")
         $bodyRow.each(function(index,ele) {
             $(ele).find('td').each(function (index, ele) {
-                $(ele).width( $headCells.eq(index).width())
+                $(ele).css("width", $headCells.eq(index)[0].style.width);// .css("width"))
             });
         });
     }
 
+    // works with table
     function fixScroll() {
         var pos = this.scrollTop;
         if(typeof(pos)!="number") pos = this.scrollTop();
@@ -54,11 +81,12 @@
         }
     }
 
+    // works with div and table
     function addColumn(txt,w) {
         var thead = this.find("thead tr")
         var c = $("<th>").appendTo(thead.eq(0)).text(txt);
         if(w) {
-            c.width(w);
+            c.css("width",w);
         }
     }
 
@@ -96,6 +124,7 @@
                     currIcon.removeClass("ui-icon-triangle-1-s").addClass("ui-icon-triangle-1-n");
                 }
             } else {
+                thead.find('span').remove();
                 ele.append("<span class='ui-icon ui-icon-triangle-1-n' style='display:inline-block;vertical-align:middle;'></span>");
                 currIcon = ele.find("span");
             }

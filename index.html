@@ -11,14 +11,12 @@
     <script src="apgrid.js"></script>
     <script>
         $(function () {
-            var cmpFn = function(a,b)  {
-                return a.text().localeCompare(b.text());
-            };
             $("#test").apGrid({
                 columns: [
-                    { name: "Nome", percent: 40, sort: cmpFn },
-                    { name: "Cognome", percent: 40, sort: cmpFn },
-                    { name: "Città", percent: 20, sort: cmpFn }
+                    { name: "Nome", percent: 40, type: "string" },
+                    { name: "Cognome", percent: 40, type: "string" },
+                    { name: "Città", percent: 20, type: "string" },
+                    { name: "Età", percent: 20, type: "number" }
                 ]
             });
             $("#test").apGrid("addFooter","<div>Ciao<br>Pippo</div>")
@@ -41,7 +39,7 @@
                 return this[Math.floor(Math.random() * this.length)];
             }
             for (var i = 0; i < 100; i++) {
-                $("#test").apGrid("addRow", [ names.getRand(), surnames.getRand(), cities.getRand()] );
+                $("#test").apGrid("addRow", [ names.getRand(), surnames.getRand(), cities.getRand(), Math.floor(Math.random() * 100)] );
             }
         });
     </script>

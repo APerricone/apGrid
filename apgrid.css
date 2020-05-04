@@ -1,29 +1,30 @@
 table {
     overflow-y: scroll;
     display: block;
-  }
-  table thead,
-  table tfoot,
-  table tbody tr {
+}
+
+table thead, table tfoot, table tbody {
     display: table;
     width: 100%;
     table-layout: fixed;
-  }
-  @media print {
+    overflow-x: scroll;
+}
+
+@media print {
     table {
-      display: table;
-      max-height: none !important;
+        display: table;
+        max-height: none !important;
     }
     table thead {
-      display: table-header-group !important;
+        display: table-header-group !important;
     }
     table tfoot {
-      display: table-footer-group !important;
+        display: table-footer-group !important;
     }
     table tbody tr {
-      display: table-row !important;
+        display: table-row !important;
     }
     tfoot tr, thead tr {
-      transform: none !important;
+        transform: none !important;
     }
-  }
+}
