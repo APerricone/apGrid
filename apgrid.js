@@ -9,12 +9,11 @@
         table.append(thead);
         table.append(tbody);
         this.append(table);
+        table.css("max-height", "400px")
+        table.on("scroll", function () {
+            fixScroll.call(this);
+        });
 
-        var newTH = thead.clone();
-        newTH.addClass('fixed');
-        var tc = this;
-        $(window).resize(function () { fixSizes.apply(tc); } );
-        this.prepend(newTH);
         if(typeof(setup)!='object') return;
         if('columns' in setup) {
             var defPercent = 100/setup.columns.length;
@@ -32,21 +31,35 @@
     }
 
     function fixSizes() {
-        var newTH = this.find("thead.fixed")
-        var thead = this.find("thead:not(.fixed)")
-        newTH.width(this.width());
-        newTH.find('th').each(function (index, ele) {
-            $(this).width(thead.find('th').eq(index).width());
+        var $headCells = this.find("thead tr th")
+        var $bodyRow = this.find("tbody tr")
+        $bodyRow.each(function(index,ele) {
+            $(ele).find('td').each(function (index, ele) {
+                $(ele).width( $headCells.eq(index).width())
+            });
         });
     }
+
+    function fixScroll() {
+        var pos = this.scrollTop;
+        if(typeof(pos)!="number") pos = this.scrollTop();
+        var jTable=$(this);
+        var thead = jTable.find("thead");
+        var tbody = jTable.find("tbody");
+        var tfoot = jTable.find("tfoot");
+        thead.find("tr").css("transform", "translateY(" + pos + "px)");
+        if(tfoot.length!=0) {
+            var dy = -tbody.height() + jTable.height() - tfoot.height() - thead.height() + pos;
+            tfoot.find("tr").css("transform", "translateY(" + dy + "px)");
+        }
+    }
+
     function addColumn(txt,w) {
-        var thead = this.find("thead.fixed")
-        var c = $("<th>").appendTo(thead.children(0)).text(txt);
+        var thead = this.find("thead tr")
+        var c = $("<th>").appendTo(thead.eq(0)).text(txt);
         if(w) {
             c.width(w);
         }
-        this.find("thead:not(.fixed)").html(thead.html());
-        fixSizes.apply(this);
     }
 
     function addRow() {
@@ -63,16 +76,12 @@
             else
                 ret = $(c);
         }
-        var last = tbody.find(".lastRow");
-        if(last.length>0) {
-            for (var i = 0; i < last.length; i++)
-                tbody.append(last.eq(i));
-        }
+        fixSizes.call(this);
         return ret;
     }
 
     function addSorting(columnId, cmpFn) {
-        var thead = this.find("thead.fixed")
+        var thead = this.find("thead")
         var tbody = this.find("tbody");
         thead.find('th').eq(columnId).click(function() {
             var ele = $(this);
@@ -101,16 +110,19 @@
             for (var i = 0; i < newOrder.length; i++)
                 tbody.prepend(rows.eq(newOrder[i]));
             });
-        }
+    }
 
     function addFooter(div) {
-        var tbody = this.find("tbody")
-        var r = $(tbody[0].insertRow(-1));
-        r.addClass("dummy").addClass("lastRow");
+        var table = this.find("table");
+        var tfoot = $(document.createElement('tfoot'));
+        var r = tfoot[0].insertRow();
+        var c = r.insertCell();
+        c.colSpan=100;
         div=$(div);
-        div.addClass("footer");
-        this.append(div);
-        r.height(div.height());
+        $(c).append(div);
+        table.append(tfoot);
+        $(r).height(div.height());
+        setTimeout(() => fixScroll.call(this),100);
         return r;
     }
 
@@ -122,9 +134,6 @@
             case "string":
                 // methods
                 switch([].shift.apply(arguments)) {
-                    case "fixSizes":
-                        fixSizes.apply(this,arguments);
-                        break;
                     case "addColumn":
                         addColumn.apply(this,arguments);
                         break;
