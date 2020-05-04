@@ -1,0 +1,71 @@
+@media print {
+    .apGrid
+    { /*in print show all rows */
+        height: auto !important;
+    }
+    .apGrid .fixed
+    { /*In print hide the fixed header*/
+        display: none !important;
+    }
+}
+.apGrid
+{
+    overflow-y: scroll;
+    height: 400px; /* It can be a parameter*/
+    text-align: center;
+}
+
+.apGrid .fixed
+{
+    display: block;
+    position: absolute;
+}
+.apGrid .footer
+{
+    display: block;
+    position: absolute;
+    bottom: 0;
+}
+
+.apGrid table
+{
+    width: 100%;
+    border-collapse: collapse;
+    background: #2bac86;
+}
+
+.apGrid th
+{
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    background-color: rgb(220,220,220);
+    height: 23px;
+    padding: 1px;
+}
+
+.apGrid tbody tr:nth-child(even)
+{
+    background-color: #EEE;
+}
+
+/* LOADING PART */
+.apGrid .loading
+{
+    background-color: White;
+    border: 1px solid black;
+    border-radius: 10px;
+    margin-left:auto;
+    margin-right:auto;
+    top: 0;
+    font-size:large;
+    text-align: center;
+    display: block;
+    padding: 8px;
+    position: absolute;
+}
+.apGrid .loading img
+{
+    vertical-align: middle;
+    margin-right: 16px;
+}
+

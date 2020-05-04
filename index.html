@@ -1,0 +1,58 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="apgrid.css">
+    <script src="https://code.jquery.com/jquery-3.5.0.min.js"
+        integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+        integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+    <script src="apgrid.js"></script>
+    <script>
+        $(function () {
+            var cmpFn = function(a,b)  {
+                return a.text().localeCompare(b.text());
+            };
+            $("#test").apGrid({
+                columns: [
+                    { name: "Nome", percent: 40, sort: cmpFn },
+                    { name: "Cognome", percent: 40, sort: cmpFn },
+                    { name: "Città", percent: 20, sort: cmpFn }
+                ]
+            });
+            $("#test").apGrid("addFooter","<div>Ciao</div>")
+            var names = ["Agostino", "Benedetto", "Carla", "Daria",
+                "Emilio", "Francesco", "Giuseppe", "Ignazio",
+                "Julio", "Katia", "Lorenzo", "Mario",
+                "Noemi", "Oreste", "Paolo", "Quasimodo",
+                "Rosario", "Stefania", "Tano", "Umberto",
+                "Vittoria", "Wilma", "Xavier", "Yasmina", "Zaida"];
+            var surnames = ["Amadori", "Brunetti", "Carollo", "D'Aiuto",
+                "Enrighi", "Facchinetti", "Graziani", "Iniziati",
+                "Javier", "Kommodori", "Lo Porto", "Montella",
+                "Natali", "Orlando", "Perricone", "Quadri",
+                "Rossi", "Stefanelli", "Taricone", "Umili",
+                "Vasquez", "Wagner", "Xun", "Yamada", "Zonca"];
+            var cities = ["Grosseto", "Milano", "Palermo", "Ferrara",
+                "Ancona", "Domodossola", "Catania", "Bari",
+                "Nuoro", "Salerno"];
+            Array.prototype.getRand = function () {
+                return this[Math.floor(Math.random() * this.length)];
+            }
+            for (var i = 0; i < 100; i++) {
+                $("#test").apGrid("addRow", [ names.getRand(), surnames.getRand(), cities.getRand()] );
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <h1>Space before</h1>
+    <span>text text text text text text text text text text text text text
+        text text text text text text text text text text text text text
+        text text text text text text text text text text text text text
+    </span>
+    <div id="test"></div>
+</body>
+
+</html>
