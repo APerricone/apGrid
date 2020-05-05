@@ -1,30 +1,14 @@
-table {
+.apGrid table {
     overflow-y: scroll;
     display: block;
 }
 
-table thead, table tfoot, table tbody {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-    overflow-x: scroll;
-}
-
 @media print {
-    table {
+    .apGrid table {
         display: table;
         max-height: none !important;
     }
-    table thead {
-        display: table-header-group !important;
-    }
-    table tfoot {
-        display: table-footer-group !important;
-    }
-    table tbody tr {
-        display: table-row !important;
-    }
-    tfoot tr, thead tr {
+    .apGrid tfoot tr,.apGrid thead tr {
         transform: none !important;
     }
 }

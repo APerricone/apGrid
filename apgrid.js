@@ -1,19 +1,19 @@
 (function( $ ) {
 
     function strFn(a,b)  {
-        return a.text().localeCompare(b.text());
+        return a.text().localeCompare(b.text(), {sensitivity : 'base'});
     };
     function numFn(a,b)  {
         try {
             a=parseInt(a.text());
-            if(isNaN(a)) return 1;
-        } catch(e) { return 1; }
-        try {
-            b=parseInt(b.text());
-            if(isNaN(b)) return -1;
+            if(isNaN(a)) return -1;
         } catch(e) { return -1; }
         try {
-            return a<b? 1 : b<a? -1 : 0;
+            b=parseInt(b.text());
+            if(isNaN(b)) return 1;
+        } catch(e) { return 1; }
+        try {
+            return a<b? -1 : b<a? 1 : 0;
         } catch(e) { return 0; }
     };
 
@@ -117,15 +117,16 @@
             var asc = -1;
             var currIcon = ele.find("span");
             if (currIcon.length != 0)  {
-                if (currIcon.hasClass("ui-icon-triangle-1-n")) {
-                    currIcon.removeClass("ui-icon-triangle-1-n").addClass("ui-icon-triangle-1-s");
+                var txt = currIcon.text()
+                if (txt=="▼") {
+                    currIcon.text("▲");
                     asc = 1;
                 } else {
-                    currIcon.removeClass("ui-icon-triangle-1-s").addClass("ui-icon-triangle-1-n");
+                    currIcon.text("▼");
                 }
             } else {
                 thead.find('span').remove();
-                ele.append("<span class='ui-icon ui-icon-triangle-1-n' style='display:inline-block;vertical-align:middle;'></span>");
+                ele.append("<span>▼</span>");
                 currIcon = ele.find("span");
             }
             var rows = tbody.find('tr:not(.dummy)'); //.slice();
@@ -138,7 +139,7 @@
             })
             for (var i = 0; i < newOrder.length; i++)
                 tbody.prepend(rows.eq(newOrder[i]));
-            });
+            }).css("cursor","pointer");
     }
 
     function addFooter(div) {

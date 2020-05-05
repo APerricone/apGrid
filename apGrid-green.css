@@ -1,4 +1,4 @@
-table {
+.apGrid table {
   border-collapse: collapse;
   text-align: left;
   width: 100%;
@@ -7,74 +7,49 @@ table {
   border: 1px solid #2bac86;
   border-radius: 5px;
 }
-table td,
-table th {
+.apGrid table td,
+.apGrid table th {
   padding: 3px 10px;
 }
-table thead th {
+.apGrid table thead th {
   background-color: #2bac86;
   color: #ffffff;
   font-size: 15px;
   font-weight: bold;
   border-left: 1px solid #0070a8;
 }
-table thead th:first-child {
+.apGrid table thead th:first-child {
   border: none;
 }
-table tbody td {
-  color: black;
+.apGrid table tbody td {
   border-left: 1px solid #e1eef4;
   font-size: 12px;
   font-weight: normal;
 }
-table tbody tr:nth-child(odd) {
-  background: #9cffe2;
+
+.apGrid table tbody tr {
+  background: white;
+  color: black;
 }
-table tbody td:first-child {
+
+.apGrid table tbody tr:nth-child(odd) {
+  background: #9cffe2;
+  color: black;
+}
+
+.apGrid table tbody tr:hover, .apGrid table th:hover {
+  background: #093857;
+  color: white;
+}
+
+.apGrid table tbody td:first-child {
   border-left: none;
 }
-table tbody tr:last-child td {
+.apGrid table tbody tr:last-child td {
   border-bottom: none;
 }
-table tfoot td {
+.apGrid table tfoot td {
   border-top: 1px solid #006699;
   background: #2bac86;
   color: white;
-}
-table tfoot td {
-  padding: 0;
-  font-size: 12px;
-}
-table tfoot td {
-  padding: 2px;
-}
-table tfoot td ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  text-align: right;
-}
-table tfoot li {
-  display: inline;
-}
-table tfoot li a {
-  text-decoration: none;
-  display: inline-block;
-  padding: 2px 8px;
-  margin: 1px;
-  color: #ffffff;
-  border: 1px solid #006699;
-  -webkit-border-radius: 3px;
-  -moz-border-radius: 3px;
-  border-radius: 3px;
-  background: -webkit-gradient(
-    linear,
-    left top,
-    left bottom,
-    color-stop(0.05, #006699),
-    color-stop(1, #00557f)
-  );
-  background: -moz-linear-gradient(center top, #006699 5%, #00557f 100%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#006699', endColorstr='#00557F');
-  background-color: #006699;
 }
