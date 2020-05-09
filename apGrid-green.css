@@ -1,7 +1,6 @@
 .apGrid table {
-  border-collapse: collapse;
+  border-spacing: 0;
   text-align: left;
-  width: 100%;
   font: normal 12px/150% Arial, Helvetica, sans-serif;
   background: #fff;
   border: 1px solid #2bac86;

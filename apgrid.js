@@ -19,6 +19,8 @@
 
     // works only with div
     function SetupGrid(setup) {
+        var defSetup = { columns: [], data: undefined, height: 400}
+        setup = $.extend(defSetup, setup);
         this.addClass("apGrid");
         var table = $(document.createElement('table'));
         var thead = $(document.createElement('thead'));
@@ -27,12 +29,11 @@
         table.append(thead);
         table.append(tbody);
         this.append(table);
-        table.css("max-height", "400px")
+        this.css("max-height", setup.height+"px")
             .on("scroll", function () {
                 fixScroll.call(this);
         });
-        if(typeof(setup)!='object') return;
-        if('columns' in setup) {
+        if(setup.columns.length>0) {
             var defPercent = 100/setup.columns.length;
             for(var i=0;i<setup.columns.length;++i) {
                 var colDef = setup.columns[i];
@@ -45,12 +46,15 @@
                         case "number":
                             addSorting.call(this,i,numFn);
                             break;
-                    }
+                        case "date":
+                            addSorting.call(this,i,numFn);
+                            break;
+                        }
 
                 }
             }
         }
-        if('data' in setup) {
+        if(setup.data ) {
             setData.call(this, setup.data);
         }
     }
@@ -93,25 +97,6 @@
         if(colDef.percent) {
             c.css("width",colDef.percent);
         }
-
-    }
-
-    function addRow() {
-        var tbody = this.find("tbody");
-        var r = $(tbody[0].insertRow(-1));
-        var ret = undefined;
-        var list = arguments;
-        if(Array.isArray(list[0])) list=list[0];
-        for (var i = 0; i < list.length; ++i) {
-            var cell = $(r[0].insertCell());
-            cell.text(list[i]+"");
-            if(ret)
-                ret.add($(cell));
-            else
-                ret = $(cell);
-        }
-        fixSizes.call(this);
-        return ret;
     }
 
     function internalSetData(data) {
@@ -148,6 +133,7 @@
                     if(("format" in def) && typeof(def.format)=="function")
                         txt=def.format(txt);
                     var cell = $(tableRow[0].insertCell());
+                    if('align' in def) cell.css("text-align", def.align);
                     cell.text(txt+"");
                 }
             }
@@ -225,9 +211,6 @@
                         break;
                     case "addFooter":
                         addFooter.apply(this,arguments);
-                        break;
-                    case "addRow":
-                        addRow.apply(this,arguments);
                         break;
                     case "addSorting":
                         addSorting.apply(this,arguments);

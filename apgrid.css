@@ -1,11 +1,15 @@
-.apGrid table {
+.apGrid {
     overflow-y: scroll;
-    display: block;
+    overflow-x: hidden;
+}
+.apGrid table {
+    width: 100%;
 }
 
 @media print {
-    .apGrid table {
-        display: table;
+    .apGrid {
+        overflow-y: unset;
+        overflow-x: unset;
         max-height: none !important;
     }
     .apGrid tfoot tr,.apGrid thead tr {
