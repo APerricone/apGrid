@@ -1,44 +1,58 @@
+:root {
+  --main-color: #2bac86;
+  --secondary-color: #093857;
+  --main-contrast-color: white;
+  --secondary-contrast-color: white;
+  --row-background: #ffffff;
+  --alt-row-background: #9cffe2;
+  --row-color: black;
+  --alt-row-color: black;
+}
+
+.green-table {
+  border: 1px solid var(--main-color);
+  border-radius: 5px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 .green-table table {
   border-spacing: 0;
   text-align: left;
-  font: normal 12px/150% Arial, Helvetica, sans-serif;
-  background: #fff;
-  border: 1px solid #2bac86;
-  border-radius: 5px;
+
+  background: var(--main-contrast-color);
 }
 .green-table table td,
 .green-table table th {
   padding: 3px 10px;
 }
 .green-table table thead th {
-  background-color: #2bac86;
-  color: #ffffff;
-  font-size: 15px;
+  background-color: var(--main-color);
+  color: var(--main-contrast-color);
+  font-size: normal 12px;
   font-weight: bold;
-  border-left: 1px solid #0070a8;
+  border-left: 1px solid var(--secondary-color);
 }
 .green-table table thead th:first-child {
   border: none;
 }
 .green-table table tbody td {
   border-left: 1px solid #e1eef4;
-  font-size: 12px;
   font-weight: normal;
 }
 
 .green-table table tbody tr {
-  background: white;
-  color: black;
+  background: var(--row-background);
+  color: var(--row-color);
 }
 
 .green-table table tbody tr:nth-child(odd) {
-  background: #9cffe2;
-  color: black;
+  background: var(--alt-row-background);
+  color: var(--row-color);
 }
 
 .green-table table tbody tr:hover, .green-table table th:hover {
-  background: #093857;
-  color: white;
+  background: var(--secondary-color);
+  color: var(--secondary-contrast-color);
 }
 
 .green-table table tbody td:first-child {
@@ -48,7 +62,7 @@
   border-bottom: none;
 }
 .green-table table tfoot td {
-  border-top: 1px solid #006699;
-  background: #2bac86;
-  color: white;
+  border-top: 1px solid var(--secondary-color);;
+  background: var(--main-color);
+  color: var(--main-contrast-color);
 }

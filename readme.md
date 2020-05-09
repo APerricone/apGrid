@@ -48,7 +48,7 @@ A set of key/value that configure the apGrid-
 
      The function to use to translate the data in string to be shown on screen
 
-   * ### sortable
+   * ### ~~sortable~~
      Type: [Boolean](http://api.jquery.com/Types/#Boolean)
 
      If true the header will be clickable and every click sort the data based on this column.
@@ -79,6 +79,13 @@ A set of key/value that configure the apGrid-
 
     Number of indefinite rows visible before the function call. the default is **10% of [pageSize](#pageSize)** ***TODO***
 
+  * ### footer
+    Type: [String](http://api.jquery.com/Types/#String) or [Function](http://api.jquery.com/Types/#Function)([PlainObject](http://api.jquery.com/Types/#PlainObject))
+    html code to write on footer. ~~or a function to be call every time the data is updated.~~ ***TODO***
+    * [Number](http://api.jquery.com/Types/#Number) totalRows: total number of data on grid (indefinite included)
+    * [Number](http://api.jquery.com/Types/#Number) start: first row on screen ***TODO***
+    * [Number](http://api.jquery.com/Types/#Number) end: last row on screen ***TODO***
+
 # Methods
 
 ## setData
@@ -89,4 +96,4 @@ Allows to update the data on the grid.
 
    It can be specified on **data** if it is a plainObject. ***TODO***
 
-
+## addFooter
