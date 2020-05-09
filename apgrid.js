@@ -1,22 +1,5 @@
 (function( $ ) {
 
-    function strFn(a,b)  {
-        return a.text().localeCompare(b.text(), {sensitivity : 'base'});
-    };
-    function numFn(a,b)  {
-        try {
-            a=parseInt(a.text());
-            if(isNaN(a)) return -1;
-        } catch(e) { return -1; }
-        try {
-            b=parseInt(b.text());
-            if(isNaN(b)) return 1;
-        } catch(e) { return 1; }
-        try {
-            return a<b? -1 : b<a? 1 : 0;
-        } catch(e) { return 0; }
-    };
-
     // works only with div
     function SetupGrid(setup) {
         var defSetup = { columns: [], data: undefined, height: 400}
@@ -36,25 +19,10 @@
         if(setup.columns.length>0) {
             var defPercent = 100/setup.columns.length;
             for(var i=0;i<setup.columns.length;++i) {
-                var colDef = setup.columns[i];
-                addColumn.call(this, colDef);
-                if('type' in colDef) {
-                    switch(colDef.type) {
-                        case "string":
-                            addSorting.call(this,i,strFn);
-                            break;
-                        case "number":
-                            addSorting.call(this,i,numFn);
-                            break;
-                        case "date":
-                            addSorting.call(this,i,numFn);
-                            break;
-                        }
-
-                }
+                addColumn.call(this, setup.columns[i]);
             }
         }
-        if(setup.data ) {
+        if(setup.data) {
             setData.call(this, setup.data);
         }
     }
@@ -87,12 +55,13 @@
 
     // works with div and table
     function addColumn(colDef) {
-        if(!('name' in colDef)) colDef.name = "col"+i;
+        var thead = this.find("thead tr")
+        if(!('text' in colDef)) colDef.text = "col" + thead.find("th").length+1;
         if(!('percent' in colDef)) colDef.percent = undefined;
         if(!('format' in colDef)) colDef.format = (v) => (v+"");
         if(typeof(colDef.percent)=="number") colDef.percent+="%";
-        var thead = this.find("thead tr")
-        var c = $("<th>").appendTo(thead.eq(0)).text(colDef.name);
+
+        var c = $("<th>").appendTo(thead.eq(0)).text(colDef.text);
         c.data("def",colDef)
         if(colDef.percent) {
             c.css("width",colDef.percent);
@@ -106,19 +75,19 @@
         if(typeof(data)!="object" ) throw "invalid call";
         if(!Array.isArray(data.rows)) throw "invalid call";
         if(!("start" in data)) data.start=1;
-        if(!("end" in data)) data.end=data.rows.length+1;
         if(!("totalRows" in data)) data.totalRows=data.rows.length;
         var tbody = this.find("tbody");
         var thead = this.find("thead tr").find("th");
-        tbody.find("tr").remove();
+        var startRows = tbody.find("tr");
         for(var i=0; i<data.totalRows; ++i) {
-            var tableRow = $(tbody[0].insertRow(-1));
+            var tableRow = i<startRows.length? startRows.eq(i) : $(tbody[0].insertRow(-1));
             var dataRow = undefined;
-            var id=i+1;
-            if(id>=data.start && id<=data.end) {
-                dataRow = data.rows[id-data.start];
+            var id=i+1, idx=i+1-data.start;
+            if(idx>0 && idx<data.rows.length) {
+                dataRow = data.rows[idx];
             }
             tableRow.toggleClass("indefinite",!dataRow);
+            var startCells = tableRow.find("td")
             if(dataRow) {
                 if(typeof(dataRow) != "object")  throw "invalid call";
                 if(id in dataRow) id=dataRow.id;
@@ -132,7 +101,7 @@
                     var txt = dataRow[j];
                     if(("format" in def) && typeof(def.format)=="function")
                         txt=def.format(txt);
-                    var cell = $(tableRow[0].insertCell());
+                    var cell = j<startCells.length? startCells.eq(j) : $(tableRow[0].insertCell());
                     if('align' in def) cell.css("text-align", def.align);
                     cell.text(txt+"");
                 }

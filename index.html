@@ -3,7 +3,7 @@
 <head>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="apgrid.css">
-    <link rel="stylesheet" href="apGrid-green.css">
+    <link rel="stylesheet" href="green-table.css">
     <script src="https://code.jquery.com/jquery-3.5.0.min.js"
         integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
@@ -14,11 +14,11 @@
         $(function () {
             $("#test").apGrid({
                 columns: [
-                    { name: "Nome", percent: 30, type: "string" },
-                    { name: "Cognome", percent: 30, type: "string" },
-                    { name: "Città", percent: 20, type: "string" },
-                    { name: "Reddito", percent: 10, type: "number", align: "right" },
-                    { name: "Nascita", percent: 10, type: "date", align: "right", format: (a) => a.toLocaleDateString() },
+                    { text: "Nome", percent: 30, type: "string" },
+                    { text: "Cognome", percent: 30, type: "string" },
+                    { text: "Città", percent: 20, type: "string" },
+                    { text: "Reddito", percent: 10, type: "number", align: "right" },
+                    { text: "Nascita", percent: 10, type: "date", align: "right", format: (a) => a.toLocaleDateString() },
                 ], data: getStaticDataSource()
             });
             $("#test").apGrid("addFooter",'<div style="text-align: right;">100 elements</div>')
@@ -33,7 +33,7 @@
         text text text text text text text text text text text text text
         text text text text text text text text text text text text text
     </span>
-    <div id="test"></div>
+    <div id="test" class="green-table"></div>
 </body>
 
 </html>

@@ -1,4 +1,4 @@
-.apGrid table {
+.green-table table {
   border-spacing: 0;
   text-align: left;
   font: normal 12px/150% Arial, Helvetica, sans-serif;
@@ -6,48 +6,48 @@
   border: 1px solid #2bac86;
   border-radius: 5px;
 }
-.apGrid table td,
-.apGrid table th {
+.green-table table td,
+.green-table table th {
   padding: 3px 10px;
 }
-.apGrid table thead th {
+.green-table table thead th {
   background-color: #2bac86;
   color: #ffffff;
   font-size: 15px;
   font-weight: bold;
   border-left: 1px solid #0070a8;
 }
-.apGrid table thead th:first-child {
+.green-table table thead th:first-child {
   border: none;
 }
-.apGrid table tbody td {
+.green-table table tbody td {
   border-left: 1px solid #e1eef4;
   font-size: 12px;
   font-weight: normal;
 }
 
-.apGrid table tbody tr {
+.green-table table tbody tr {
   background: white;
   color: black;
 }
 
-.apGrid table tbody tr:nth-child(odd) {
+.green-table table tbody tr:nth-child(odd) {
   background: #9cffe2;
   color: black;
 }
 
-.apGrid table tbody tr:hover, .apGrid table th:hover {
+.green-table table tbody tr:hover, .green-table table th:hover {
   background: #093857;
   color: white;
 }
 
-.apGrid table tbody td:first-child {
+.green-table table tbody td:first-child {
   border-left: none;
 }
-.apGrid table tbody tr:last-child td {
+.green-table table tbody tr:last-child td {
   border-bottom: none;
 }
-.apGrid table tfoot td {
+.green-table table tfoot td {
   border-top: 1px solid #006699;
   background: #2bac86;
   color: white;
