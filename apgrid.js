@@ -36,9 +36,7 @@
             var defPercent = 100/setup.columns.length;
             for(var i=0;i<setup.columns.length;++i) {
                 var colDef = setup.columns[i];
-                var name = ('name' in colDef)? colDef.name : "col"+i;
-                var percent = ('percent' in colDef)? colDef.percent+"%" : defPercent;
-                addColumn.call(this, name, percent);
+                addColumn.call(this, colDef);
                 if('type' in colDef) {
                     switch(colDef.type) {
                         case "string":
@@ -51,7 +49,9 @@
 
                 }
             }
-
+        }
+        if('data' in setup) {
+            setData.call(this, setup.data);
         }
     }
 
@@ -82,30 +82,86 @@
     }
 
     // works with div and table
-    function addColumn(txt,w) {
+    function addColumn(colDef) {
+        if(!('name' in colDef)) colDef.name = "col"+i;
+        if(!('percent' in colDef)) colDef.percent = undefined;
+        if(!('format' in colDef)) colDef.format = (v) => (v+"");
+        if(typeof(colDef.percent)=="number") colDef.percent+="%";
         var thead = this.find("thead tr")
-        var c = $("<th>").appendTo(thead.eq(0)).text(txt);
-        if(w) {
-            c.css("width",w);
+        var c = $("<th>").appendTo(thead.eq(0)).text(colDef.name);
+        c.data("def",colDef)
+        if(colDef.percent) {
+            c.css("width",colDef.percent);
         }
+
     }
 
     function addRow() {
-        var tbody = this.find("tbody")
+        var tbody = this.find("tbody");
         var r = $(tbody[0].insertRow(-1));
         var ret = undefined;
         var list = arguments;
         if(Array.isArray(list[0])) list=list[0];
         for (var i = 0; i < list.length; ++i) {
-            var c = $(r[0].insertCell());
-            c.text(list[i]+"");
+            var cell = $(r[0].insertCell());
+            cell.text(list[i]+"");
             if(ret)
-                ret.add($(c));
+                ret.add($(cell));
             else
-                ret = $(c);
+                ret = $(cell);
         }
         fixSizes.call(this);
         return ret;
+    }
+
+    function internalSetData(data) {
+        if(Array.isArray(data)) {
+            data = { rows: data }
+        }
+        if(typeof(data)!="object" ) throw "invalid call";
+        if(!Array.isArray(data.rows)) throw "invalid call";
+        if(!("start" in data)) data.start=1;
+        if(!("end" in data)) data.end=data.rows.length+1;
+        if(!("totalRows" in data)) data.totalRows=data.rows.length;
+        var tbody = this.find("tbody");
+        var thead = this.find("thead tr").find("th");
+        tbody.find("tr").remove();
+        for(var i=0; i<data.totalRows; ++i) {
+            var tableRow = $(tbody[0].insertRow(-1));
+            var dataRow = undefined;
+            var id=i+1;
+            if(id>=data.start && id<=data.end) {
+                dataRow = data.rows[id-data.start];
+            }
+            tableRow.toggleClass("indefinite",!dataRow);
+            if(dataRow) {
+                if(typeof(dataRow) != "object")  throw "invalid call";
+                if(id in dataRow) id=dataRow.id;
+                if(!Array.isArray(dataRow) && ("data" in dataRow)) dataRow=dataRow.data;
+                if(!Array.isArray(dataRow)) throw "invalid call";
+                for (let j = 0; j < dataRow.length; ++j) {
+                    var col = thead.eq(j);
+                    if(!col) break;
+                    var def = col.data("def");
+                    if(!def) break;
+                    var txt = dataRow[j];
+                    if(("format" in def) && typeof(def.format)=="function")
+                        txt=def.format(txt);
+                    var cell = $(tableRow[0].insertCell());
+                    cell.text(txt+"");
+                }
+            }
+        }
+        fixSizes.call(this);
+    }
+
+    function setData(data) {
+        // TODO: show loading
+        Promise.resolve(data).then((data) => {
+            // TODO: hide loading
+            internalSetData.call(this,data);
+        });
+
     }
 
     function addSorting(columnId, cmpFn) {

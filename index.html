@@ -11,15 +11,7 @@
     <script src="apgrid.js"></script>
     <script>
         $(function () {
-            $("#test").apGrid({
-                columns: [
-                    { name: "Nome", percent: 40, type: "string" },
-                    { name: "Cognome", percent: 40, type: "string" },
-                    { name: "Città", percent: 20, type: "string" },
-                    { name: "Età", percent: 20, type: "number" }
-                ]
-            });
-            $("#test").apGrid("addFooter",'<div style="text-align: right;">100 elements</div>')
+            // create fake database
             var names = ["Agostino", "Benedetto", "Carla", "Daria",
                 "Emilio", "Francesco", "Giuseppe", "Ignazio",
                 "Julio", "Katia", "Lorenzo", "Mario",
@@ -38,9 +30,46 @@
             Array.prototype.getRand = function () {
                 return this[Math.floor(Math.random() * this.length)];
             }
-            for (var i = 0; i < 100; i++) {
-                $("#test").apGrid("addRow", [ names.getRand(), surnames.getRand(), cities.getRand(), Math.floor(Math.random() * 100)] );
+            Date.getRand = function(start, end) {
+                start= start || (new Date()).addFullYear(-10);
+                end= end || (new Date());
+                return new Date(+start + Math.random() * (end - start));
             }
+            Date.prototype.addFullYear = function (delta) {
+                this.setFullYear(this.getFullYear()+delta);
+                return this;
+            }
+            var end = (new Date()).addFullYear(-18)
+            var start = (new Date(end)).addFullYear(-60);
+            var data = [];
+            for (var i = 0; i < 1000; i++) {
+                data.push([names.getRand(), surnames.getRand(), cities.getRand(),
+                    10000 + Math.floor(Math.random() * 50000),
+                    Date.getRand(start,end)]);
+            }
+
+            // direct data source, it can be an object that return this type of data
+            function demoDataSource(opt) {
+                var defOpt = { start: 1, end: 1000}
+                opt = $.extend(defOpt, opt);
+                return { start: opt.start, end: opt.end, totalRows: data.length, rows: data.splice(opt.start-1, opt.end-1) };
+            }
+            // ajax data source, simulate 500ms to get the data.
+            function demoDataSourcePromise(opt) {
+                return new Promise((res) => setTimeout(() => res(demoDataSource(opt), 500)));
+            }
+            $("#test").apGrid({
+                columns: [
+                    { name: "Nome", percent: 30, type: "string" },
+                    { name: "Cognome", percent: 30, type: "string" },
+                    { name: "Città", percent: 15, type: "string" },
+                    { name: "Reddito", percent: 10, type: "number" },
+                    { name: "Nascita", percent: 10, type: "date", format: (a) => a.toLocaleDateString() },
+                ],
+                data: data
+            });
+            $("#test").apGrid("addFooter",'<div style="text-align: right;">100 elements</div>')
+            //$("#test").apGrid("addFooter", () => `<div style="text-align: right;">${$("#test").apGrid("nRows")} elements</div>`)
         });
     </script>
 </head>
