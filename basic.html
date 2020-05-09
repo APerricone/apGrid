@@ -12,16 +12,19 @@
     <script src="demo_dataSource.js"></script>
     <script>
         $(function () {
+            var incomeFormat = new Intl.NumberFormat(undefined,{ style: 'currency', currency: 'EUR',minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            var dateFormat = new Intl.DateTimeFormat(undefined,{ month: '2-digit', day: '2-digit', year: 'numeric' });
             $("#test").apGrid({
                 columns: [
-                    { text: "Nome", percent: 30, type: "string" },
-                    { text: "Cognome", percent: 30, type: "string" },
-                    { text: "Città", percent: 20, type: "string" },
-                    { text: "Reddito", percent: 10, type: "number", align: "right" },
-                    { text: "Nascita", percent: 10, type: "date", align: "right", format: (a) => a.toLocaleDateString() },
-                ], data: getStaticDataSource()
+                    { text: "Name", percent: 30, type: "string" },
+                    { text: "Surname", percent: 30, type: "string" },
+                    { text: "City", percent: 20, type: "string" },
+                    { text: "Income", percent: 10, type: "number", align: "right", format: incomeFormat.format },
+                    { text: "Born", percent: 10, type: "date", align: "right", format: dateFormat.format },
+                ],
+                data: getStaticDataSource(100),
+                footer: '<div style="text-align: right;">100 elements</div>'
             });
-            $("#test").apGrid("addFooter",'<div style="text-align: right;">100 elements</div>')
             //$("#test").apGrid("addFooter", () => `<div style="text-align: right;">${$("#test").apGrid("nRows")} elements</div>`)
         });
     </script>
@@ -34,6 +37,9 @@
         text text text text text text text text text text text text text
     </span>
     <div id="test" class="green-table"></div>
+<div style="text-align: center;margin-top: 16px;">
+    <button onclick="window.print()">Try to print this page</button>
+</div>
 </body>
 
 </html>

@@ -2,7 +2,7 @@
 
     // works only with div
     function SetupGrid(setup) {
-        var defSetup = { columns: [], data: undefined, height: 400}
+        var defSetup = { columns: [], height: 400}
         setup = $.extend(defSetup, setup);
         this.addClass("apGrid");
         var table = $(document.createElement('table'));
@@ -24,6 +24,9 @@
         }
         if(setup.data) {
             setData.call(this, setup.data);
+        }
+        if(setup.footer) {
+            addFooter.call(this,setup.footer);
         }
     }
 

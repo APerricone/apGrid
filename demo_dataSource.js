@@ -34,7 +34,10 @@ for (var i = 0; i < 1000; i++) {
     Date.getRand(start, end)]);
 }
 
-function getStaticDataSource() {
+function getStaticDataSource(n) {
+    if(n) {
+        return data.slice(0,n);
+    }
     return data;
 }
 function getDynamicDataSource(opt) {
