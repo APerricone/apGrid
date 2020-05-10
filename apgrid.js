@@ -15,7 +15,7 @@
         table.append(thead);
         table.append(tbody);
         this.append(table);
-        this.css("max-height", setup.height+"px")
+        this.css("height", setup.height+"px")
             .on("scroll", function () {
                 fixScroll.call(this);
         });
@@ -44,7 +44,6 @@
         });
     }
 
-    // works with table
     function fixScroll() {
         var pos = this.scrollTop;
         if(typeof(pos)!="number") pos = this.scrollTop();
@@ -62,90 +61,28 @@
     // works with div and table
     function addColumn(colDef) {
         var thead = this.find("thead tr")
-        if(!('text' in colDef)) colDef.text = "col" + thead.find("th").length+1;
+        if(!('name' in colDef) || typeof(colDef.name)!="string" || colDef.name.length==0)
+            colDef.name = "col" + thead.find("th").length+1;
+        if(!('text' in colDef)) colDef.text = colDef.name;
         if(!('percent' in colDef)) colDef.percent = undefined;
         if(!('format' in colDef)) colDef.format = (v) => (v+"");
+        if(!('sortable' in colDef)) colDef.sortable = false;
         if(typeof(colDef.percent)=="number") colDef.percent+="%";
 
-        var c = $("<th>").appendTo(thead.eq(0)).text(colDef.text);
-        c.data("def",colDef)
+        var c = $("<th>");
+        c.appendTo(thead.eq(0)).text(colDef.text)
+            .data("def",colDef)
+            .attr("name",colDef.name)
+            .attr("sort",colDef.sortable)
+            .css("cursor","pointer");
         if(colDef.percent) {
             c.css("width",colDef.percent);
         }
-    }
-
-    /**
-     * @pamam data
-     * @param {boolean} highlight
-     */
-    function internalSetData(data,highlight) {
-        if(Array.isArray(data)) {
-            data = { rows: data }
-        }
-        if(typeof(data)!="object" ) throw "invalid call";
-        if(!Array.isArray(data.rows)) throw "invalid call";
-        if(!("start" in data)) data.start=1;
-        if(!("totalRows" in data)) data.totalRows=data.rows.length;
-        if('highlight' in data ) highlight = data.higlight;
-        if(highlight && typeof(highlight)=="boolean") highlight = 1000;
-        function fnHighlight(cell) {
-            cell.addClass("changed");
-            setTimeout(()=>cell.removeClass("changed"),highlight);
-        }
-        var tbody = this.find("tbody");
-        var thead = this.find("thead tr").find("th");
-        var startRows = tbody.find("tr");
-        for(var i=0; i<data.totalRows; ++i) {
-            var tableRow = i<startRows.length? startRows.eq(i) : $(tbody[0].insertRow(-1));
-            var dataRow = undefined;
-            var id=i+1, idx=i+1-data.start;
-            if(idx>0 && idx<data.rows.length) {
-                dataRow = data.rows[idx];
-            }
-            tableRow.toggleClass("indefinite",!dataRow);
-            var startCells = tableRow.find("td")
-            if(dataRow) {
-                if(typeof(dataRow) != "object")  throw "invalid call";
-                if(id in dataRow) id=dataRow.id;
-                if(!Array.isArray(dataRow) && ("data" in dataRow)) dataRow=dataRow.data;
-                if(!Array.isArray(dataRow)) throw "invalid call";
-                for (let j = 0; j < dataRow.length; ++j) {
-                    var col = thead.eq(j);
-                    if(!col) break;
-                    var def = col.data("def");
-                    if(!def) break;
-                    var txt = dataRow[j];
-                    if(("format" in def) && typeof(def.format)=="function")
-                        txt=def.format(txt);
-                    /** @type {JQuery} */
-                    var cell = j<startCells.length? startCells.eq(j) : $(tableRow[0].insertCell());
-                    var oldTxt = cell.text();
-                    if('align' in def) cell.css("text-align", def.align);
-                    txt=txt+""
-                    cell.text(txt);
-                    if(highlight && txt!=oldTxt) {
-                        fnHighlight(cell);
-                   }
-                }
-            }
-        }
-        fixSizes.call(this);
-    }
-
-    function setData(data, highlight) {
-        // TODO: show loading
-        Promise.resolve(data).then((data) => {
-            // TODO: hide loading
-            internalSetData.call(this,data,highlight);
-        });
-
-    }
-
-    function addSorting(columnId, cmpFn) {
-        var thead = this.find("thead")
-        var tbody = this.find("tbody");
-        thead.find('th').eq(columnId).click(function() {
+        var grid = this;
+        c.click(function() {
+            if(grid.attr("dynamic")!="true") return;
             var ele = $(this);
+            if(ele.attr("sort")!="true") return;
             var idx = ele.index();
             var asc = -1;
             var currIcon = ele.find("span");
@@ -159,20 +96,116 @@
                 }
             } else {
                 thead.find('span').remove();
-                ele.append("<span>▼</span>");
-                currIcon = ele.find("span");
+                currIcon = $("<span>▲</span>").appendTo(ele);
             }
-            var rows = tbody.find('tr:not(.dummy)'); //.slice();
-            var newOrder = []; newOrder.length = rows.length;
-            for (var i = 0; i < newOrder.length; i++) newOrder[i] = i;
-            newOrder.sort(function(a,b) {
-                var va = rows.eq(a).children().eq(idx);
-                var vb = rows.eq(b).children().eq(idx);
-                return asc * cmpFn(va,vb);
-            })
-            for (var i = 0; i < newOrder.length; i++)
-                tbody.prepend(rows.eq(newOrder[i]));
-            }).css("cursor","pointer");
+            setData.call(grid);
+        });
+    }
+
+    /**
+     * @pamam data
+     * @param {boolean} highlight
+     */
+    function internalSetData(data,highlight) {
+        if(Array.isArray(data)) {
+            data = { rows: data }
+        }
+        if(typeof(data)!="object") throw "invalid call";
+        if(!Array.isArray(data.rows)) throw "invalid call";
+        if(!("start" in data)) data.start=1;
+        if(!("totalRows" in data)) data.totalRows=data.rows.length;
+        if('highlight' in data ) highlight = data.higlight;
+        if(highlight && typeof(highlight)=="boolean") highlight = 1000;
+        function fnHighlight(cell) {
+            cell.addClass("changed");
+            setTimeout(()=>cell.removeClass("changed"),highlight);
+        }
+        var tbody = this.find("tbody");
+        var thead = this.find("thead tr");
+        var height = thead.height();
+        thead = thead.find("th")
+        /** @type {JQuery} */
+        var startRows = tbody.find("tr");
+        for(var i=0;i<startRows.length; ++i) height=Math.min(height, startRows.eq(i).height());
+        for(var i=0; i<data.totalRows; ++i) {
+            var tableRow = i<startRows.length? startRows.eq(i) : $(tbody[0].insertRow(-1));
+            var dataRow = undefined;
+            var idx=i+1-data.start; //index on data.rows
+            if(idx>=0 && idx<data.rows.length) {
+                dataRow = data.rows[idx];
+            }
+            tableRow.attr("idx",i+1).toggleClass("indefinite",!dataRow);
+            var startCells = tableRow.find("td")
+            if(dataRow) {
+                tableRow.height("auto");
+                if(typeof(dataRow) != "object")  throw "invalid call";
+                if(!Array.isArray(dataRow) && ("data" in dataRow)) dataRow=dataRow.data;
+                if(!Array.isArray(dataRow)) throw "invalid call";
+                for (let j = 0; j < dataRow.length; ++j) {
+                    var col = thead.eq(j);
+                    if(!col) break;
+                    var def = col.data("def");
+                    if(!def) break;
+                    var txt = dataRow[j];
+                    if(("format" in def) && typeof(def.format)=="function")
+                        txt=def.format(txt);
+                    /** @type {JQuery} */
+                    var cell = j<startCells.length? startCells.eq(j) : $(tableRow[0].insertCell());
+                    cell.removeAttr("colspan")
+                    var oldTxt = cell.text();
+                    if('align' in def) cell.css("text-align", def.align);
+                    txt=txt+""
+                    cell.text(txt);
+                    if(highlight && txt!=oldTxt) {
+                        fnHighlight(cell);
+                   }
+                }
+            } else
+                tableRow.height(height).html("<td colspan='100'></td>")
+        }
+        fixSizes.call(this);
+    }
+
+    function callDataFunc(dataFn) {
+        var par = {};
+        /** @type {JQuery<T>} */
+        var header = this.find("th");
+        var currSort = header.find("span:contains(▼),span:contains(▲)");
+        par.sort = undefined;
+        if(currSort.length==1) {
+            if(currSort.text().indexOf("▲")>=0) par.sort="+"; else par.sort="-";
+            par.sort += currSort.parent().attr("name");
+        }
+        var scrollTop = this.scrollTop();
+        var rowHeight = header.height();
+        var height = this.height();
+        par.start = Math.floor(scrollTop/rowHeight)+1;
+        par.end = par.start+Math.ceil(height/rowHeight)+1; // plentiful
+        return dataFn(par);
+    }
+
+    function setData(data, highlight) {
+        if(typeof(data)=="undefined") {
+            data=this.data("source");
+            if(typeof(data)=="undefined") {
+                throw "invalid call";
+                return;
+            }
+        }
+        if(typeof(data)=="function") {
+            this.data("source",data);
+            this.attr("dynamic", true);
+            data=callDataFunc.call(this,data);
+        }
+        // TODO: show loading
+        Promise.resolve(data).then((data) => {
+            // TODO: hide loading
+            internalSetData.call(this,data,highlight);
+        });
+
+    }
+
+    function addSorting(columnId, cmpFn) {
     }
 
     function addFooter(div) {

@@ -7,8 +7,8 @@ A jQuery plugin to manage data vision in a table or dataGrid.
  * [easy themeable](themes.html)
  * [print support](basic.html)
  * [dynamic data](dynamic.html)
+ * [sorting](sorting.html)
  * ~~[virtual scrolling](virtualScrolling.html)~~ ***TODO***
- * ~~[sorting](sorting.html)~~ ***TODO***
  * ~~[filtering](filtering.html)~~ ***TODO***
 
 # Documentation
@@ -54,12 +54,12 @@ A set of key/value that configure the apGrid-
 
      The function to use to translate the data in string to be shown on screen
 
-   * ### ~~sortable~~
+   * ### sortable
      Type: [Boolean](http://api.jquery.com/Types/#Boolean)
 
      If true the header will be clickable and every click sort the data based on this column.
 
-     *It is possible in case of dynamic data* ***TODO***
+     *It is possible in case of dynamic data*
 
  * ### data
    Type: [Array](http://api.jquery.com/Types/#Array) **or** [PlainObject](http://api.jquery.com/Types/#PlainObject) **or** ~~[Promise](https://api.jquery.com/category/deferred-object/) of ([Array](http://api.jquery.com/Types/#Array) **or** [PlainObject](http://api.jquery.com/Types/#PlainObject)) or [Function](http://api.jquery.com/Types/#Function)([PlainObject](http://api.jquery.com/Types/#PlainObject))~~
@@ -76,7 +76,6 @@ A set of key/value that configure the apGrid-
      * [Number](http://api.jquery.com/Types/#Number) start: the first 1-based index request
      * [Number](http://api.jquery.com/Types/#Number) end: the last 1-based index request
      * [String](http://api.jquery.com/Types/#String) sort: current sort column
-     ***TODO***
 
   * ### ~~pageSize~~
     Type: [Number](http://api.jquery.com/Types/#Number)
@@ -85,7 +84,7 @@ A set of key/value that configure the apGrid-
   * ### ~~indefiniteSize~~
     Type: [Number](http://api.jquery.com/Types/#Number)
 
-    Number of indefinite rows visible before the function call. the default is **10% of [pageSize](#pageSize)** ***TODO***
+    Number of indefinite rows visible before the function call. the default is **10% of [pageSize](#pagesize)** ***TODO***
 
   * ### footer
     Type: [String](http://api.jquery.com/Types/#String) or [Function](http://api.jquery.com/Types/#Function)([PlainObject](http://api.jquery.com/Types/#PlainObject))
@@ -99,12 +98,14 @@ A set of key/value that configure the apGrid-
 ## setData
 Allows to update the data on the grid.
 ```javascript
-$(grid).apGrid("setData", data, highlight)
+$(grid).apGrid("setData", [data], [highlight])
 ```
  * **data** same as [data](#data) setting.
  * [Boolean](http://api.jquery.com/Types/#Boolean) or [Number](http://api.jquery.com/Types/#Number) **highlight** if true every changed It will add the class *changed* to every cell where the text changes. if boolean for one second, the specified value in msec otherwise.
 
-   It can be specified on **data** if it is a plainObject.
+   It can be specified on **data** if it is a [PlainObject](http://api.jquery.com/Types/#PlainObject).
+
+If data is not specifed last data function is called.
 
 ## addFooter
 Allows to set the footer of the grid

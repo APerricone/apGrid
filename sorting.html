@@ -1,0 +1,46 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="apgrid.css">
+    <link rel="stylesheet" href="green-table.css">
+    <script src="https://code.jquery.com/jquery-3.5.0.min.js"
+        integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+        integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+    <script src="apgrid.js"></script>
+    <script src="demo_dataSource.js"></script>
+    <script>
+        $(function () {
+            prepareData(100);
+            var incomeFormat = new Intl.NumberFormat(undefined,{ style: 'currency', currency: 'EUR',minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            var dateFormat = new Intl.DateTimeFormat(undefined,{ month: '2-digit', day: '2-digit', year: 'numeric' });
+            $("#test").apGrid({
+                columns: [
+                    { name: "name",    text: "Name",    percent: 30, sortable: true },
+                    { name: "surname", text: "Surname", percent: 30, sortable: true },
+                    { name: "city",    text: "City",    percent: 20, sortable: true },
+                    { name: "income",  text: "Income",  percent: 10, align: "right", format: incomeFormat.format, sortable: true},
+                    { name: "born",    text: "Born",    percent: 10, align: "right", format: dateFormat.format,   sortable: true},
+                ],
+                data: getSortedDataSource,
+                footer: '<div style="text-align: right;">100 elements</div>'
+            });
+            //$("#test").apGrid("addFooter", () => `<div style="text-align: right;">${$("#test").apGrid("nRows")} elements</div>`)
+        });
+    </script>
+</head>
+
+<body>
+    <h1>Space before</h1>
+    <span>text text text text text text text text text text text text text
+        text text text text text text text text text text text text text
+        text text text text text text text text text text text text text
+    </span>
+    <div id="test" class="green-table"></div>
+<div style="text-align: center;margin-top: 16px;">
+    <button onclick="window.print()">Try to print this page</button>
+</div>
+</body>
+
+</html>
