@@ -1,0 +1,44 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="apgrid.css">
+    <link rel="stylesheet" href="green-table.css">
+    <link rel="stylesheet" href="candy-table.css">
+    <script src="https://code.jquery.com/jquery-3.5.0.min.js"
+        integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+        integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+    <script src="apgrid.js"></script>
+    <script src="demo_dataSource.js"></script>
+    <script>
+        $(function () {
+            var incomeFormat = new Intl.NumberFormat(undefined,{ style: 'currency', currency: 'EUR',minimumFractionDigits: 2, maximumFractionDigits: 2 });
+            var dateFormat = new Intl.DateTimeFormat(undefined,{ month: '2-digit', day: '2-digit', year: 'numeric' });
+            $("#test").apGrid({
+                columns: [
+                    { text: "Name", percent: 30, type: "string" },
+                    { text: "Surname", percent: 30, type: "string" },
+                    { text: "City", percent: 20, type: "string" },
+                    { text: "Income", percent: 10, type: "number", align: "right", format: incomeFormat.format },
+                    { text: "Born", percent: 10, type: "date", align: "right", format: dateFormat.format },
+                ],
+                data: getStaticDataSource(100),
+                footer: '<div style="text-align: right;">100 elements</div>'
+            });
+            //$("#test").apGrid("addFooter", () => `<div style="text-align: right;">${$("#test").apGrid("nRows")} elements</div>`)
+        });
+        function theme(what) {
+            $("#test").attr("class","apGrid "+what)
+        }
+    </script>
+</head>
+
+<body>
+    <h1>Theme sample</h1>
+    <div id="test" class="green-table" style="width: 50%; float: left; margin-right: 20px;"></div>
+    <button onclick="theme('green-table')">Set green style</button>
+    <button onclick="theme('candy-table')">Set candy style</button>
+</body>
+
+</html>
