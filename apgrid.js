@@ -1,3 +1,6 @@
+/**
+ * @param {JQueryStatic} $
+*/
 (function( $ ) {
 
     // works only with div
@@ -71,7 +74,11 @@
         }
     }
 
-    function internalSetData(data) {
+    /**
+     * @pamam data
+     * @param {boolean} highlight
+     */
+    function internalSetData(data,highlight) {
         if(Array.isArray(data)) {
             data = { rows: data }
         }
@@ -79,6 +86,12 @@
         if(!Array.isArray(data.rows)) throw "invalid call";
         if(!("start" in data)) data.start=1;
         if(!("totalRows" in data)) data.totalRows=data.rows.length;
+        if('highlight' in data ) highlight = data.higlight;
+        if(highlight && typeof(highlight)=="boolean") highlight = 1000;
+        function fnHighlight(cell) {
+            cell.addClass("changed");
+            setTimeout(()=>cell.removeClass("changed"),highlight);
+        }
         var tbody = this.find("tbody");
         var thead = this.find("thead tr").find("th");
         var startRows = tbody.find("tr");
@@ -104,20 +117,26 @@
                     var txt = dataRow[j];
                     if(("format" in def) && typeof(def.format)=="function")
                         txt=def.format(txt);
+                    /** @type {JQuery} */
                     var cell = j<startCells.length? startCells.eq(j) : $(tableRow[0].insertCell());
+                    var oldTxt = cell.text();
                     if('align' in def) cell.css("text-align", def.align);
-                    cell.text(txt+"");
+                    txt=txt+""
+                    cell.text(txt);
+                    if(highlight && txt!=oldTxt) {
+                        fnHighlight(cell);
+                   }
                 }
             }
         }
         fixSizes.call(this);
     }
 
-    function setData(data) {
+    function setData(data, highlight) {
         // TODO: show loading
         Promise.resolve(data).then((data) => {
             // TODO: hide loading
-            internalSetData.call(this,data);
+            internalSetData.call(this,data,highlight);
         });
 
     }
@@ -187,6 +206,8 @@
                     case "addSorting":
                         addSorting.apply(this,arguments);
                         break;
+                    case "setData":
+                        setData.apply(this,arguments);
                 }
                 break;
         }

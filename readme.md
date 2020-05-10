@@ -6,6 +6,7 @@ A jQuery plugin to manage data vision in a table or dataGrid.
  * [sticky header and footer](basic.html)
  * [easy themeable](themes.html)
  * [print support](basic.html)
+ * [dynamic data](dynamic.html)
  * ~~[virtual scrolling](virtualScrolling.html)~~ ***TODO***
  * ~~[sorting](sorting.html)~~ ***TODO***
  * ~~[filtering](filtering.html)~~ ***TODO***
@@ -32,6 +33,11 @@ A set of key/value that configure the apGrid-
 
    An array that defines the comuns of the table
 
+   * ### name
+     Type: [String](http://api.jquery.com/Types/#String)
+
+     Internal name of the column it is used to identify the column internally
+
    * ### text
      Type: [String](http://api.jquery.com/Types/#String)
 
@@ -53,9 +59,10 @@ A set of key/value that configure the apGrid-
 
      If true the header will be clickable and every click sort the data based on this column.
 
-     *It is not possible in case of static data..* ***TODO***
+     *It is possible in case of dynamic data* ***TODO***
+
  * ### data
-   Type: [Array](http://api.jquery.com/Types/#Array) **or** [PlainObject](http://api.jquery.com/Types/#PlainObject) **or** [Promise](https://api.jquery.com/category/deferred-object/) of ([Array](http://api.jquery.com/Types/#Array) **or** [PlainObject](http://api.jquery.com/Types/#PlainObject)) or [Function](http://api.jquery.com/Types/#Function)([PlainObject](http://api.jquery.com/Types/#PlainObject))
+   Type: [Array](http://api.jquery.com/Types/#Array) **or** [PlainObject](http://api.jquery.com/Types/#PlainObject) **or** ~~[Promise](https://api.jquery.com/category/deferred-object/) of ([Array](http://api.jquery.com/Types/#Array) **or** [PlainObject](http://api.jquery.com/Types/#PlainObject)) or [Function](http://api.jquery.com/Types/#Function)([PlainObject](http://api.jquery.com/Types/#PlainObject))~~
 
    the source of the data to show, it can be **static** or **dynamc**, the dynamic source is the function.
 
@@ -68,13 +75,14 @@ A set of key/value that configure the apGrid-
    * Function that returns one of above types: if will be called if an indefinite rows are on screen. it will be called with these parameters.
      * [Number](http://api.jquery.com/Types/#Number) start: the first 1-based index request
      * [Number](http://api.jquery.com/Types/#Number) end: the last 1-based index request
+     * [String](http://api.jquery.com/Types/#String) sort: current sort column
      ***TODO***
 
-  * ### pageSize
+  * ### ~~pageSize~~
     Type: [Number](http://api.jquery.com/Types/#Number)
 
     In case of dynamic data, it specified how many rows ask to function specified on [data](#data). default: **20** ***TODO***
-  * ### indefiniteSize
+  * ### ~~indefiniteSize~~
     Type: [Number](http://api.jquery.com/Types/#Number)
 
     Number of indefinite rows visible before the function call. the default is **10% of [pageSize](#pageSize)** ***TODO***
@@ -83,17 +91,25 @@ A set of key/value that configure the apGrid-
     Type: [String](http://api.jquery.com/Types/#String) or [Function](http://api.jquery.com/Types/#Function)([PlainObject](http://api.jquery.com/Types/#PlainObject))
     html code to write on footer. ~~or a function to be call every time the data is updated.~~ ***TODO***
     * [Number](http://api.jquery.com/Types/#Number) totalRows: total number of data on grid (indefinite included)
-    * [Number](http://api.jquery.com/Types/#Number) start: first row on screen ***TODO***
-    * [Number](http://api.jquery.com/Types/#Number) end: last row on screen ***TODO***
+    * ~~[Number](http://api.jquery.com/Types/#Number) start: first row on screen~~ ***TODO***
+    * ~~[Number](http://api.jquery.com/Types/#Number) end: last row on screen~~ ***TODO***
 
 # Methods
 
 ## setData
 Allows to update the data on the grid.
-`$(grid).apGrid("setData", data, highlight)`
+```javascript
+$(grid).apGrid("setData", data, highlight)
+```
  * **data** same as [data](#data) setting.
  * [Boolean](http://api.jquery.com/Types/#Boolean) or [Number](http://api.jquery.com/Types/#Number) **highlight** if true every changed It will add the class *changed* to every cell where the text changes. if boolean for one second, the specified value in msec otherwise.
 
-   It can be specified on **data** if it is a plainObject. ***TODO***
+   It can be specified on **data** if it is a plainObject.
 
 ## addFooter
+Allows to set the footer of the grid
+```javascript
+$(grid).apGrid("addFooter", footer)
+```
+ * footer as [footer](#footer) setting.
+
