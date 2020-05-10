@@ -5,7 +5,7 @@
 
     // works only with div
     function SetupGrid(setup) {
-        var defSetup = { columns: [], height: 400}
+        var defSetup = { columns: []}
         setup = $.extend(defSetup, setup);
         this.addClass("apGrid");
         var table = $(document.createElement('table'));
@@ -15,8 +15,9 @@
         table.append(thead);
         table.append(tbody);
         this.append(table);
-        this.css("height", setup.height+"px")
-            .on("scroll", function () {
+        if(typeof(setup.height) == "number") this.css("height", setup.height+"px");
+        if(typeof(setup.height) == "string") this.css("height", setup.height);
+        this.on("scroll", function () {
                 fixScroll.call(this);
         });
         if(setup.columns.length>0) {

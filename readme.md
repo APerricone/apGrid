@@ -24,9 +24,9 @@ Type: [PlainObject](http://api.jquery.com/Types/#PlainObject)
 A set of key/value that configure the apGrid-
 
  * ### height
-   Type: [Number](http://api.jquery.com/Types/#Number)
+   Type: [Number](http://api.jquery.com/Types/#Number) or [String](http://api.jquery.com/Types/#String)
 
-   The height of the table in video, on print the table is *unlimited*.
+   The height of the table in video, on print the table is *unlimited*. default: ayti
 
  * ### columns
    Type: [Array](http://api.jquery.com/Types/#Array) of [PlainObject](http://api.jquery.com/Types/#PlainObject)
@@ -75,7 +75,7 @@ A set of key/value that configure the apGrid-
    * Function that returns one of above types: if will be called if an indefinite rows are on screen. it will be called with these parameters.
      * [Number](http://api.jquery.com/Types/#Number) start: the first 1-based index request
      * [Number](http://api.jquery.com/Types/#Number) end: the last 1-based index request
-     * [String](http://api.jquery.com/Types/#String) sort: current sort column
+     * [String](http://api.jquery.com/Types/#String) sort: current sort column prefixed by + or - for ascendent or descent sorting respectively
 
   * ### ~~pageSize~~
     Type: [Number](http://api.jquery.com/Types/#Number)
