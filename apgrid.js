@@ -103,6 +103,11 @@
         });
     }
 
+    function fnHighlight(cell) {
+        cell.addClass("changed");
+        setTimeout(()=>cell.removeClass("changed"),highlight);
+    }
+
     /**
      * @pamam data
      * @param {boolean} highlight
@@ -117,28 +122,29 @@
         if(!("totalRows" in data)) data.totalRows=data.rows.length;
         if('highlight' in data ) highlight = data.higlight;
         if(highlight && typeof(highlight)=="boolean") highlight = 1000;
-        function fnHighlight(cell) {
-            cell.addClass("changed");
-            setTimeout(()=>cell.removeClass("changed"),highlight);
-        }
         var tbody = this.find("tbody");
         var thead = this.find("thead tr");
         var height = thead.height();
         thead = thead.find("th")
         /** @type {JQuery} */
         var startRows = tbody.find("tr");
+        var firstDefinedRow = data.totalRows;
+        var lastDefinedRow = -1;
         for(var i=0;i<startRows.length; ++i) height=Math.min(height, startRows.eq(i).height());
         for(var i=0; i<data.totalRows; ++i) {
+            var justAdded = i>=startRows.length;
             var tableRow = i<startRows.length? startRows.eq(i) : $(tbody[0].insertRow(-1));
             var dataRow = undefined;
             var idx=i+1-data.start; //index on data.rows
             if(idx>=0 && idx<data.rows.length) {
                 dataRow = data.rows[idx];
             }
-            tableRow.attr("idx",i+1).toggleClass("indefinite",!dataRow);
+            tableRow.attr("idx",i+1);
             var startCells = tableRow.find("td")
             if(dataRow) {
-                tableRow.height("auto");
+                if(i<firstDefinedRow) firstDefinedRow=i;
+                if(i>lastDefinedRow) lastDefinedRow=i;
+                tableRow.height("auto").removeClass("indefinite")
                 if(typeof(dataRow) != "object")  throw "invalid call";
                 if(!Array.isArray(dataRow) && ("data" in dataRow)) dataRow=dataRow.data;
                 if(!Array.isArray(dataRow)) throw "invalid call";
@@ -161,8 +167,18 @@
                         fnHighlight(cell);
                    }
                 }
-            } else
-                tableRow.height(height).html("<td colspan='100'></td>")
+            } else {
+                if(justAdded)
+                    tableRow.addClass("indefinite",!dataRow);
+                if(tableRow.hasClass("indefinite"))
+                    tableRow.height(height).html("<td colspan='100'></td>")
+            }
+        }
+        var footFn = this.data("footer");
+        var tfoot = this.find("tfoot");
+        if(typeof(footFn)=="function" && tfoot.length>0) {
+            var footDiv = footFn(data.totalRows,firstDefinedRow+1,lastDefinedRow+1);
+            if(footDiv) tfoot.find("td").append($(footDiv));
         }
         fixSizes.call(this);
     }
@@ -215,10 +231,15 @@
         var r = tfoot[0].insertRow();
         var c = r.insertCell();
         c.colSpan=100;
-        div=$(div);
-        $(c).append(div);
+        if(typeof(div)=="function")
+            this.data("footer",div);
+        else {
+            this.data("footer",undefined);
+            div=$(div);
+            $(c).append(div);
+            $(r).height(div.height());
+        }
         table.append(tfoot);
-        $(r).height(div.height());
         setTimeout(() => fixScroll.call(this),100);
         return r;
     }

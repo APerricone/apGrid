@@ -89,10 +89,10 @@ A set of key/value that configure the apGrid-
 
   * ### footer
     Type: [String](http://api.jquery.com/Types/#String) or [Function](http://api.jquery.com/Types/#Function)([PlainObject](http://api.jquery.com/Types/#PlainObject))
-    html code to write on footer. ~~or a function to be call every time the data is updated.~~ ***TODO***
+    html code to write on footer. or a function to be call every time the data is updated.
     * [Number](http://api.jquery.com/Types/#Number) totalRows: total number of data on grid (indefinite included)
-    * ~~[Number](http://api.jquery.com/Types/#Number) start: first row on screen~~ ***TODO***
-    * ~~[Number](http://api.jquery.com/Types/#Number) end: last row on screen~~ ***TODO***
+    * [Number](http://api.jquery.com/Types/#Number) start: first row with values
+    * [Number](http://api.jquery.com/Types/#Number) end: last row with values
 
 # Methods
 
