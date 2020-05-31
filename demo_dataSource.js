@@ -47,13 +47,13 @@ var sorterFn = {
     "+name":  (a,b) => a[0].localeCompare(b[0]),
     "+surname": (a,b) => a[1].localeCompare(b[1]),
     "+city": (a,b) => a[2].localeCompare(b[2]),
-    "+income": (a,b) => a[3]<b[3]? 1 : b[3]<a[3]? -1 : 0,
-    "+born": (a,b) => a[4]<b[4]? 1 : b[4]<a[4]? -1 : 0,
+    "+income": (a,b) => a[3]<b[3]? -1 : b[3]<a[3]? 1 : 0,
+    "+born": (a,b) => a[4]<b[4]? -1 : b[4]<a[4]? 1 : 0,
     "-name":  (a,b) => -a[0].localeCompare(b[0]),
     "-surname": (a,b) => -a[1].localeCompare(b[1]),
     "-city": (a,b) => -a[2].localeCompare(b[2]),
-    "-income": (a,b) => a[3]>b[3]? 1 : b[3]>a[3]? -1 : 0,
-    "-born": (a,b) => a[4]>b[4]? 1 : b[4]>a[4]? -1 : 0
+    "-income": (a,b) => a[3]>b[3]? -1 : b[3]>a[3]? 1 : 0,
+    "-born": (a,b) => a[4]>b[4]? -1 : b[4]>a[4]? 1 : 0
 
 }
 
@@ -77,9 +77,9 @@ function getSortedDataSource(opt) {
     if(opt.sort) {
         rows = data.slice().sort(sorterFn[opt.sort]);
     } else {
-        rows = data.slice(opt.start - 1, opt.end - 1);
+        rows = data.slice();
     }
-    return { start: opt.start, end: opt.end, totalRows: data.length, rows: rows };
+    return { start: 1, end: data.length, totalRows: data.length, rows: rows };
 }
 
 

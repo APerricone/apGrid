@@ -1,0 +1,37 @@
+/* this style is for dynamic data-table,
+    if "highlight" parameter is specifide the class
+    "changed" is applied for a small time.
+    see dynamic.html for an use
+*/
+.apGrid td.changed {
+    background-color: red;
+}
+
+.apGrid td {
+    transition: background-color 0.3s;
+}
+
+/* this style is applied if a rows is not specified */
+
+.apGrid .indefinite {
+    background: linear-gradient(
+        100deg,
+        #5e7c95 10%,
+        #eee 45%,
+        #eee 55%,
+        #5e7c95 90%
+      ),
+      #5e7c95;
+    background-repeat: no-repeat;
+    background-size: 20% 100%;
+    background-position: 50% 0px;
+    animation: apGrid-indefinite 3s linear infinite;
+}
+
+@keyframes apGrid-indefinite {
+from {
+  background-position: -40% 0px;
+}
+to {
+  background-position: 140% 0px;
+}

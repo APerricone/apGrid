@@ -10,7 +10,7 @@
     .apGrid {
         overflow-y: unset;
         overflow-x: unset;
-        height: none !important;
+        height: auto !important;
     }
     .apGrid tfoot tr,.apGrid thead tr {
         transform: none !important;

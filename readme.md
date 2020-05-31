@@ -8,6 +8,7 @@ A jQuery plugin to manage data vision in a table or dataGrid.
  * [print support](basic.html)
  * [dynamic data](dynamic.html)
  * [sorting](sorting.html)
+ * ~~[progressive loading](progressive.html)~~ ***TODO***
  * ~~[virtual scrolling](virtualScrolling.html)~~ ***TODO***
  * ~~[filtering](filtering.html)~~ ***TODO***
 
